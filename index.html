@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>인수의 공구가게</title>
 <style>
   * {
@@ -12,51 +13,139 @@
   }
 
   body {
-    background-color: #f4f1ec;
+    background-color: #f2f2f2;
     color: #333;
   }
 
-  /* 헤더 (쇼핑몰 이름 + 소개) */
-  header {
+  a {
+    cursor: pointer;
+  }
+
+  /* 상단 유틸리티 바 (로그인/회원가입) */
+  .top-bar {
+    background-color: #2b2b2b;
+    color: #ddd;
+    font-size: 13px;
+  }
+
+  .top-bar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 8px 16px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .top-bar-inner a {
+    color: #ddd;
+    text-decoration: none;
+  }
+
+  .top-bar-inner a:hover {
+    color: white;
+    text-decoration: underline;
+  }
+
+  #welcome-text {
+    margin-right: auto;
+    font-weight: bold;
+    color: #ffb380;
+  }
+
+  /* 메인 헤더: 로고 + 검색창 + 장바구니 */
+  .main-header {
+    background-color: white;
+    border-bottom: 2px solid #e8590c;
+  }
+
+  .main-header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px;
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    color: #e8590c;
+    font-size: 26px;
+    white-space: nowrap;
+  }
+
+  .search-bar {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+  }
+
+  .search-bar input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 2px solid #e8590c;
+    border-right: none;
+    border-radius: 20px 0 0 20px;
+    font-size: 14px;
+    outline: none;
+  }
+
+  .search-bar button {
     background-color: #e8590c;
     color: white;
-    text-align: center;
-    padding: 20px;
-  }
-
-  header h1 {
-    font-size: 28px;
-    margin-bottom: 5px;
-  }
-
-  header p {
+    border: none;
+    padding: 0 20px;
+    border-radius: 0 20px 20px 0;
+    cursor: pointer;
     font-size: 14px;
   }
 
-  /* 메뉴 */
-  nav {
+  .cart-icon-btn {
+    background: none;
+    border: 2px solid #2b2b2b;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 15px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .cart-icon-btn:hover {
+    background-color: #2b2b2b;
+    color: white;
+  }
+
+  /* 카테고리 메뉴 */
+  .category-nav {
+    background-color: #2b2b2b;
     display: flex;
     justify-content: center;
-    background-color: #2b2b2b;
+    flex-wrap: wrap;
   }
 
-  nav a {
+  .category-nav button {
+    background: none;
+    border: none;
     color: white;
-    text-decoration: none;
-    padding: 15px 20px;
-    font-size: 16px;
+    padding: 14px 18px;
+    font-size: 15px;
+    cursor: pointer;
   }
 
-  nav a:hover {
+  .category-nav button:hover,
+  .category-nav button.active {
     background-color: #e8590c;
   }
 
   /* 배너 */
   .banner {
-    background-color: #2b2b2b;
+    background-color: #e8590c;
     color: white;
     text-align: center;
-    padding: 60px 20px;
+    padding: 50px 20px;
   }
 
   .banner h2 {
@@ -65,62 +154,111 @@
   }
 
   .banner button {
-    background-color: #e8590c;
-    color: white;
+    background-color: white;
+    color: #e8590c;
     border: none;
     padding: 12px 24px;
     font-size: 16px;
+    font-weight: bold;
     border-radius: 6px;
     cursor: pointer;
   }
 
-  .banner button:hover {
-    background-color: #c44a09;
+  /* 상품 섹션 */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 16px;
   }
 
-  /* 상품 목록 */
+  .section h2 {
+    font-size: 20px;
+    margin-bottom: 16px;
+    color: #2b2b2b;
+  }
+
   .products {
     display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 40px 20px;
     flex-wrap: wrap;
+    gap: 16px;
   }
 
   .card {
+    position: relative;
     background-color: white;
-    border: 1px solid #e0ddd6;
+    border: 1px solid #e5e5e5;
     border-radius: 10px;
-    width: 220px;
-    text-align: center;
-    padding: 20px;
+    width: 200px;
+    padding: 14px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  .best-badge {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    background-color: #e8590c;
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 6px;
+    z-index: 1;
   }
 
   .card .product-photo {
     width: 100%;
-    height: 140px;
+    height: 120px;
     object-fit: cover;
     border-radius: 8px;
     margin-bottom: 10px;
   }
 
   .card h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    color: #e8590c;
+    font-size: 15px;
+    margin-bottom: 8px;
+    height: 20px;
+    overflow: hidden;
   }
 
   .card .old-price {
     text-decoration: line-through;
     color: #999;
-    font-size: 14px;
+    font-size: 12px;
+  }
+
+  .card .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .card .discount {
+    color: #e8590c;
+    font-weight: bold;
+    font-size: 16px;
   }
 
   .card .price {
-    font-size: 20px;
+    font-size: 17px;
     font-weight: bold;
     color: #2b2b2b;
+  }
+
+  .card .add-cart-btn {
+    width: 100%;
+    background-color: #2b2b2b;
+    color: white;
+    border: none;
+    padding: 8px 0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .card .add-cart-btn:hover {
+    background-color: #e8590c;
   }
 
   /* 하단 연락처 */
@@ -133,8 +271,8 @@
     font-size: 14px;
   }
 
-  /* 페이지 안에서 뜨는 팝업 */
-  .popup-overlay {
+  /* 모달 공통 */
+  .modal-overlay {
     display: none;
     position: fixed;
     top: 0;
@@ -145,98 +283,192 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    padding: 16px;
   }
 
-  .popup-overlay.active {
+  .modal-overlay.active {
     display: flex;
   }
 
-  .popup-box {
+  .modal-box {
     background-color: white;
-    padding: 30px;
+    padding: 28px;
     border-radius: 10px;
-    max-width: 320px;
-    text-align: center;
-    position: fixed;
+    width: 100%;
+    max-width: 360px;
   }
 
-  .popup-box p {
-    white-space: pre-line;
-    margin-bottom: 20px;
-    color: #333;
+  .modal-box h2 {
+    color: #e8590c;
+    margin-bottom: 18px;
+    font-size: 20px;
   }
 
-  .popup-box button {
+  .modal-box input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  .modal-box .modal-btn {
+    width: 100%;
     background-color: #e8590c;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px;
     border-radius: 6px;
     cursor: pointer;
+    font-size: 15px;
+    margin-top: 6px;
+  }
+
+  .modal-box .modal-close {
+    width: 100%;
+    background: none;
+    color: #888;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  .modal-box p.info {
+    text-align: center;
+    white-space: pre-line;
+    margin-bottom: 10px;
+  }
+
+  /* 장바구니 모달 */
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .cart-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
+  .cart-item-info {
+    flex: 1;
+  }
+
+  .cart-item-info .cart-item-name {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .cart-item-info .cart-item-price {
+    font-size: 13px;
+    color: #e8590c;
+    font-weight: bold;
+  }
+
+  .cart-item button {
+    background-color: #eee;
+    border: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .cart-qty {
+    min-width: 20px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .cart-remove {
+    color: #999;
+    font-size: 12px;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: auto;
+    border-radius: 0;
+  }
+
+  .cart-total {
+    text-align: right;
+    font-size: 17px;
+    font-weight: bold;
+    margin: 14px 0;
+  }
+
+  .cart-total span {
+    color: #e8590c;
+  }
+
+  .cart-empty {
+    text-align: center;
+    color: #999;
+    padding: 20px 0;
   }
 </style>
 </head>
 <body>
 
-  <!-- 상단: 쇼핑몰 이름 + 소개 -->
-  <header>
-    <h1>인수의 공구가게</h1>
-    <p>튼튼하고 믿을 수 있는 공구, 인수의 공구가게</p>
+  <!-- 상단 유틸리티 바 -->
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <span id="welcome-text"></span>
+      <a id="login-link" onclick="openModal('login-modal')">로그인</a>
+      <a id="signup-link" onclick="openModal('signup-modal')">회원가입</a>
+      <a id="logout-link" onclick="logout()" style="display:none;">로그아웃</a>
+      <a>고객센터</a>
+    </div>
+  </div>
+
+  <!-- 메인 헤더 -->
+  <header class="main-header">
+    <div class="main-header-inner">
+      <h1 class="logo">인수의 공구가게</h1>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="상품을 검색해보세요" onkeyup="if(event.key==='Enter') searchProducts()">
+        <button onclick="searchProducts()">검색</button>
+      </div>
+      <button class="cart-icon-btn" onclick="openModal('cart-modal')">🛒 장바구니 (<span id="cart-count">0</span>)</button>
+    </div>
   </header>
 
-  <!-- 메뉴 4개 -->
-  <nav>
-    <a href="#" onclick="showStaticPopup('인수의 공구가게\n\n좋은 공구를 합리적인 가격에 보내드립니다.')">홈</a>
-    <a href="#">전체상품</a>
-    <a href="#">공지사항</a>
-    <a href="#" onclick="showStaticPopup('문의 전화: 010-1234-5678')">문의하기</a>
+  <!-- 카테고리 메뉴 -->
+  <nav class="category-nav">
+    <button class="cat-btn active" onclick="filterCategory('전체', this)">전체</button>
+    <button class="cat-btn" onclick="filterCategory('수공구', this)">수공구</button>
+    <button class="cat-btn" onclick="filterCategory('전동공구', this)">전동공구</button>
+    <button class="cat-btn" onclick="filterCategory('측정공구', this)">측정공구</button>
+    <button class="cat-btn" onclick="filterCategory('안전용품', this)">안전용품</button>
   </nav>
 
-  <!-- 큰 배너 -->
+  <!-- 배너 -->
   <div class="banner">
     <h2>튼튼한 공구, 지금 바로 만나보세요!</h2>
-    <button onclick="showStaticPopup('믿을 수 있는 공구를 준비했습니다! 곧 만나보세요 🔧')">상품 보러가기</button>
+    <button onclick="openModal('signup-modal')">회원가입하고 할인받기</button>
   </div>
 
-  <!-- 상품 카드 5개 -->
-  <div class="products">
+  <!-- 베스트 상품 -->
+  <section class="section">
+    <h2>🔥 베스트 상품</h2>
+    <div class="products" id="best-products"></div>
+  </section>
 
-    <div class="card">
-      <img class="product-photo" src="https://images.pexels.com/photos/15827212/pexels-photo-15827212/free-photo-of-hammers-in-workshop.jpeg?auto=compress&cs=tinysrgb&w=400" alt="망치">
-      <h3>망치</h3>
-      <div class="old-price">15,000원</div>
-      <div class="price">12,000원</div>
-    </div>
-
-    <div class="card">
-      <img class="product-photo" src="https://images.pexels.com/photos/16720099/pexels-photo-16720099/free-photo-of-multi-screwdriver-set.jpeg?auto=compress&cs=tinysrgb&w=400" alt="드라이버 세트">
-      <h3>드라이버 세트</h3>
-      <div class="old-price">25,000원</div>
-      <div class="price">19,900원</div>
-    </div>
-
-    <div class="card">
-      <img class="product-photo" src="https://images.pexels.com/photos/1094767/pexels-photo-1094767.jpeg?auto=compress&cs=tinysrgb&w=400" alt="전동드릴">
-      <h3>전동드릴</h3>
-      <div class="old-price">89,000원</div>
-      <div class="price">72,000원</div>
-    </div>
-
-    <div class="card">
-      <img class="product-photo" src="https://images.pexels.com/photos/3143082/pexels-photo-3143082.jpeg?auto=compress&cs=tinysrgb&w=400" alt="줄자">
-      <h3>줄자</h3>
-      <div class="old-price">8,000원</div>
-      <div class="price">5,900원</div>
-    </div>
-
-    <div class="card">
-      <img class="product-photo" src="https://images.pexels.com/photos/16243260/pexels-photo-16243260/free-photo-of-wrenches-hanging-on-wall.jpeg?auto=compress&cs=tinysrgb&w=400" alt="렌치 세트">
-      <h3>렌치 세트</h3>
-      <div class="old-price">35,000원</div>
-      <div class="price">28,000원</div>
-    </div>
-
-  </div>
+  <!-- 전체 상품 -->
+  <section class="section">
+    <h2 id="product-list-title">전체 상품</h2>
+    <div class="products" id="all-products"></div>
+  </section>
 
   <!-- 맨 아래 연락처 -->
   <footer>
@@ -244,27 +476,294 @@
     <p>주소: 경기도 어느 공업사 거리</p>
   </footer>
 
-  <!-- 페이지 안에서 뜨는 팝업 -->
-  <div class="popup-overlay" id="popup">
-    <div class="popup-box">
-      <p id="popup-text"></p>
-      <button onclick="closePopup()">닫기</button>
+  <!-- 회원가입 모달 -->
+  <div class="modal-overlay" id="signup-modal">
+    <div class="modal-box">
+      <h2>회원가입</h2>
+      <input type="text" id="signup-name" placeholder="이름">
+      <input type="email" id="signup-email" placeholder="이메일">
+      <input type="password" id="signup-password" placeholder="비밀번호">
+      <button class="modal-btn" onclick="signup()">가입하기</button>
+      <button class="modal-close" onclick="closeModal('signup-modal')">닫기</button>
+    </div>
+  </div>
+
+  <!-- 로그인 모달 -->
+  <div class="modal-overlay" id="login-modal">
+    <div class="modal-box">
+      <h2>로그인</h2>
+      <input type="email" id="login-email" placeholder="이메일">
+      <input type="password" id="login-password" placeholder="비밀번호">
+      <button class="modal-btn" onclick="login()">로그인</button>
+      <button class="modal-close" onclick="closeModal('login-modal')">닫기</button>
+    </div>
+  </div>
+
+  <!-- 장바구니 모달 -->
+  <div class="modal-overlay" id="cart-modal">
+    <div class="modal-box">
+      <h2>장바구니</h2>
+      <div id="cart-items"></div>
+      <div class="cart-total">총 금액: <span id="cart-total-price">0</span>원</div>
+      <button class="modal-btn" onclick="checkout()">주문하기</button>
+      <button class="modal-close" onclick="closeModal('cart-modal')">닫기</button>
+    </div>
+  </div>
+
+  <!-- 안내 팝업 -->
+  <div class="modal-overlay" id="info-modal">
+    <div class="modal-box">
+      <p class="info" id="info-text"></p>
+      <button class="modal-btn" onclick="closeModal('info-modal')">확인</button>
     </div>
   </div>
 
   <script>
-    function showStaticPopup(message) {
-      const box = document.querySelector('.popup-box');
-      document.getElementById('popup-text').innerText = message;
-      document.getElementById('popup').classList.add('active');
+    // 상품 데이터
+    const products = [
+      { id: 1, name: '망치', category: '수공구', price: 12000, oldPrice: 15000, best: true,
+        img: 'https://images.pexels.com/photos/15827212/pexels-photo-15827212/free-photo-of-hammers-in-workshop.jpeg?auto=compress&cs=tinysrgb&w=400' },
+      { id: 2, name: '드라이버 세트', category: '수공구', price: 19900, oldPrice: 25000, best: true,
+        img: 'https://images.pexels.com/photos/16720099/pexels-photo-16720099/free-photo-of-multi-screwdriver-set.jpeg?auto=compress&cs=tinysrgb&w=400' },
+      { id: 3, name: '전동드릴', category: '전동공구', price: 72000, oldPrice: 89000, best: true,
+        img: 'https://images.pexels.com/photos/1094767/pexels-photo-1094767.jpeg?auto=compress&cs=tinysrgb&w=400' },
+      { id: 4, name: '줄자', category: '측정공구', price: 5900, oldPrice: 8000, best: false,
+        img: 'https://images.pexels.com/photos/3143082/pexels-photo-3143082.jpeg?auto=compress&cs=tinysrgb&w=400' },
+      { id: 5, name: '렌치 세트', category: '수공구', price: 28000, oldPrice: 35000, best: false,
+        img: 'https://images.pexels.com/photos/16243260/pexels-photo-16243260/free-photo-of-wrenches-hanging-on-wall.jpeg?auto=compress&cs=tinysrgb&w=400' },
+      { id: 6, name: '니퍼', category: '수공구', price: 9900, oldPrice: 13000, best: false,
+        img: 'https://images.pexels.com/photos/40951571/pexels-photo-40951571/free-photo-of-close-up-of-red-handled-pliers-on-pegboard.jpeg?auto=compress&cs=tinysrgb&w=400' },
+      { id: 7, name: '그라인더', category: '전동공구', price: 65000, oldPrice: 80000, best: true,
+        img: 'https://images.pexels.com/photos/977526/pexels-photo-977526.jpeg?auto=compress&cs=tinysrgb&w=400' },
+      { id: 8, name: '전기톱', category: '전동공구', price: 95000, oldPrice: 120000, best: false,
+        img: 'https://images.pexels.com/photos/18866926/pexels-photo-18866926/free-photo-of-cutting-a-board-using-a-dewalt-circular-saw-and-a-speed-square.jpeg?auto=compress&cs=tinysrgb&w=400' },
+      { id: 9, name: '캘리퍼스', category: '측정공구', price: 15000, oldPrice: 20000, best: false,
+        img: 'https://images.pexels.com/photos/32633664/pexels-photo-32633664/free-photo-of-digital-caliper-on-rustic-wooden-surface.jpeg?auto=compress&cs=tinysrgb&w=400' },
+      { id: 10, name: '수평계', category: '측정공구', price: 11000, oldPrice: 14000, best: false,
+        img: 'https://images.pexels.com/photos/6251067/pexels-photo-6251067.jpeg?auto=compress&cs=tinysrgb&w=400' },
+      { id: 11, name: '안전장갑', category: '안전용품', price: 7000, oldPrice: 10000, best: false,
+        img: 'https://images.pexels.com/photos/37892679/pexels-photo-37892679/free-photo-of-worn-work-gloves-on-rustic-wooden-surface.jpeg?auto=compress&cs=tinysrgb&w=400' }
+    ];
 
-      box.style.left = (window.innerWidth - box.offsetWidth) / 2 + 'px';
-      box.style.top = (window.innerHeight - box.offsetHeight) / 2 + 'px';
+    let currentCategory = '전체';
+    let currentKeyword = '';
+
+    // 상품 카드 한 장 만들기
+    function createCard(p) {
+      const discountRate = Math.round((1 - p.price / p.oldPrice) * 100);
+      return `
+        <div class="card">
+          ${p.best ? '<div class="best-badge">BEST</div>' : ''}
+          <img class="product-photo" src="${p.img}" alt="${p.name}">
+          <h3>${p.name}</h3>
+          <div class="old-price">${p.oldPrice.toLocaleString()}원</div>
+          <div class="price-row">
+            <span class="discount">${discountRate}%</span>
+            <span class="price">${p.price.toLocaleString()}원</span>
+          </div>
+          <button class="add-cart-btn" onclick="addToCart(${p.id})">장바구니 담기</button>
+        </div>
+      `;
     }
 
-    function closePopup() {
-      document.getElementById('popup').classList.remove('active');
+    // 상품 목록 다시 그리기 (카테고리 + 검색어 반영)
+    function renderProducts() {
+      document.getElementById('best-products').innerHTML =
+        products.filter(p => p.best).map(createCard).join('');
+
+      const filtered = products.filter(function (p) {
+        const matchesCategory = currentCategory === '전체' || p.category === currentCategory;
+        const matchesKeyword = p.name.includes(currentKeyword);
+        return matchesCategory && matchesKeyword;
+      });
+
+      document.getElementById('product-list-title').textContent =
+        currentCategory === '전체' ? '전체 상품' : currentCategory;
+
+      document.getElementById('all-products').innerHTML =
+        filtered.length ? filtered.map(createCard).join('') : '<p class="cart-empty">상품이 없습니다.</p>';
     }
+
+    function filterCategory(category, btn) {
+      currentCategory = category;
+      document.querySelectorAll('.cat-btn').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      renderProducts();
+    }
+
+    function searchProducts() {
+      currentKeyword = document.getElementById('search-input').value.trim();
+      renderProducts();
+    }
+
+    // 모달 공통
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+    function showInfo(message) {
+      document.getElementById('info-text').textContent = message;
+      openModal('info-modal');
+    }
+
+    // 회원가입 / 로그인 (localStorage에 저장되는 간단한 데모 기능)
+    function getMembers() {
+      return JSON.parse(localStorage.getItem('gongu-members') || '[]');
+    }
+    function saveMembers(members) {
+      localStorage.setItem('gongu-members', JSON.stringify(members));
+    }
+
+    function signup() {
+      const name = document.getElementById('signup-name').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
+      const password = document.getElementById('signup-password').value;
+
+      if (!name || !email || !password) {
+        showInfo('이름, 이메일, 비밀번호를 모두 입력해주세요.');
+        return;
+      }
+
+      const members = getMembers();
+      if (members.some(function (m) { return m.email === email; })) {
+        showInfo('이미 가입된 이메일입니다.');
+        return;
+      }
+
+      members.push({ name: name, email: email, password: password });
+      saveMembers(members);
+      closeModal('signup-modal');
+      setLoggedInUser(name);
+      showInfo(name + '님, 가입을 환영합니다!');
+    }
+
+    function login() {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      const member = getMembers().find(function (m) { return m.email === email && m.password === password; });
+
+      if (!member) {
+        showInfo('이메일 또는 비밀번호가 올바르지 않습니다.');
+        return;
+      }
+
+      closeModal('login-modal');
+      setLoggedInUser(member.name);
+      showInfo(member.name + '님, 환영합니다!');
+    }
+
+    function logout() {
+      localStorage.removeItem('gongu-current-user');
+      updateLoginUI(null);
+    }
+
+    function setLoggedInUser(name) {
+      localStorage.setItem('gongu-current-user', name);
+      updateLoginUI(name);
+    }
+
+    function updateLoginUI(name) {
+      const welcome = document.getElementById('welcome-text');
+      if (name) {
+        welcome.textContent = name + '님 환영합니다';
+        document.getElementById('login-link').style.display = 'none';
+        document.getElementById('signup-link').style.display = 'none';
+        document.getElementById('logout-link').style.display = 'inline';
+      } else {
+        welcome.textContent = '';
+        document.getElementById('login-link').style.display = 'inline';
+        document.getElementById('signup-link').style.display = 'inline';
+        document.getElementById('logout-link').style.display = 'none';
+      }
+    }
+
+    // 장바구니 (localStorage에 저장)
+    function getCart() {
+      return JSON.parse(localStorage.getItem('gongu-cart') || '[]');
+    }
+    function saveCart(cart) {
+      localStorage.setItem('gongu-cart', JSON.stringify(cart));
+      renderCart();
+    }
+
+    function addToCart(productId) {
+      const cart = getCart();
+      const line = cart.find(function (c) { return c.id === productId; });
+      if (line) {
+        line.qty += 1;
+      } else {
+        cart.push({ id: productId, qty: 1 });
+      }
+      saveCart(cart);
+      showInfo('장바구니에 담았습니다.');
+    }
+
+    function changeQty(productId, diff) {
+      const cart = getCart();
+      const line = cart.find(function (c) { return c.id === productId; });
+      if (!line) return;
+      line.qty += diff;
+      const newCart = line.qty <= 0 ? cart.filter(function (c) { return c.id !== productId; }) : cart;
+      saveCart(newCart);
+    }
+
+    function removeFromCart(productId) {
+      saveCart(getCart().filter(function (c) { return c.id !== productId; }));
+    }
+
+    function renderCart() {
+      const cart = getCart();
+      const cartItemsEl = document.getElementById('cart-items');
+      let total = 0;
+      let countTotal = 0;
+
+      if (cart.length === 0) {
+        cartItemsEl.innerHTML = '<p class="cart-empty">장바구니가 비어 있습니다.</p>';
+      } else {
+        cartItemsEl.innerHTML = cart.map(function (line) {
+          const p = products.find(function (pr) { return pr.id === line.id; });
+          if (!p) return '';
+          total += p.price * line.qty;
+          countTotal += line.qty;
+          return `
+            <div class="cart-item">
+              <img src="${p.img}" alt="${p.name}">
+              <div class="cart-item-info">
+                <div class="cart-item-name">${p.name}</div>
+                <div class="cart-item-price">${p.price.toLocaleString()}원</div>
+                <button class="cart-remove" onclick="removeFromCart(${p.id})">삭제</button>
+              </div>
+              <button onclick="changeQty(${p.id}, -1)">-</button>
+              <span class="cart-qty">${line.qty}</span>
+              <button onclick="changeQty(${p.id}, 1)">+</button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 삭제로 수량 0이 된 상품이 있었을 수 있으니 개수 다시 계산
+      countTotal = cart.reduce(function (sum, line) { return sum + line.qty; }, 0);
+
+      document.getElementById('cart-total-price').textContent = total.toLocaleString();
+      document.getElementById('cart-count').textContent = countTotal;
+    }
+
+    function checkout() {
+      if (getCart().length === 0) {
+        showInfo('장바구니가 비어 있습니다.');
+        return;
+      }
+      saveCart([]);
+      closeModal('cart-modal');
+      showInfo('주문이 완료되었습니다!\n이용해주셔서 감사합니다.');
+    }
+
+    // 초기 로딩
+    renderProducts();
+    renderCart();
+    updateLoginUI(localStorage.getItem('gongu-current-user'));
   </script>
 
 </body>
