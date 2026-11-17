@@ -193,6 +193,10 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   }
 
+  .card-clickable {
+    cursor: pointer;
+  }
+
   .best-badge {
     position: absolute;
     top: -8px;
@@ -416,6 +420,59 @@
     color: #999;
     padding: 20px 0;
   }
+
+  /* 상품 상세 모달 */
+  .detail-box {
+    max-width: 380px;
+  }
+
+  .detail-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 14px;
+  }
+
+  .detail-box h2 {
+    margin-bottom: 4px;
+  }
+
+  .detail-category {
+    color: #999;
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  .detail-desc {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+
+  .qty-selector {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 14px 0;
+  }
+
+  .qty-selector button {
+    background-color: #eee;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .qty-selector span {
+    font-size: 16px;
+    min-width: 20px;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
@@ -510,6 +567,28 @@
     </div>
   </div>
 
+  <!-- 상품 상세 모달 -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="modal-box detail-box">
+      <img class="detail-img" id="detail-img" src="" alt="">
+      <h2 id="detail-name"></h2>
+      <p class="detail-category" id="detail-category"></p>
+      <p class="detail-desc" id="detail-desc"></p>
+      <div class="old-price" id="detail-oldprice"></div>
+      <div class="price-row">
+        <span class="discount" id="detail-discount"></span>
+        <span class="price" id="detail-price"></span>
+      </div>
+      <div class="qty-selector">
+        <button onclick="changeDetailQty(-1)">-</button>
+        <span id="detail-qty">1</span>
+        <button onclick="changeDetailQty(1)">+</button>
+      </div>
+      <button class="modal-btn" onclick="addDetailToCart()">장바구니 담기</button>
+      <button class="modal-close" onclick="closeModal('detail-modal')">닫기</button>
+    </div>
+  </div>
+
   <!-- 안내 팝업 -->
   <div class="modal-overlay" id="info-modal">
     <div class="modal-box">
@@ -522,26 +601,37 @@
     // 상품 데이터
     const products = [
       { id: 1, name: '망치', category: '수공구', price: 12000, oldPrice: 15000, best: true,
+        desc: '손에 착 감기는 그립과 탄탄한 헤드로 못 박기, 철거 작업에 모두 좋습니다.',
         img: 'https://images.pexels.com/photos/15827212/pexels-photo-15827212/free-photo-of-hammers-in-workshop.jpeg?auto=compress&cs=tinysrgb&w=400' },
       { id: 2, name: '드라이버 세트', category: '수공구', price: 19900, oldPrice: 25000, best: true,
+        desc: '다양한 규격의 십자/일자 비트가 포함된 세트로 가정용으로도 충분합니다.',
         img: 'https://images.pexels.com/photos/16720099/pexels-photo-16720099/free-photo-of-multi-screwdriver-set.jpeg?auto=compress&cs=tinysrgb&w=400' },
       { id: 3, name: '전동드릴', category: '전동공구', price: 72000, oldPrice: 89000, best: true,
+        desc: '강력한 토크로 나무, 철판까지 빠르게 뚫어주는 인기 전동공구입니다.',
         img: 'https://images.pexels.com/photos/1094767/pexels-photo-1094767.jpeg?auto=compress&cs=tinysrgb&w=400' },
       { id: 4, name: '줄자', category: '측정공구', price: 5900, oldPrice: 8000, best: false,
+        desc: '5m까지 측정 가능한 휴대용 줄자로, 눈금이 크고 선명합니다.',
         img: 'https://images.pexels.com/photos/3143082/pexels-photo-3143082.jpeg?auto=compress&cs=tinysrgb&w=400' },
       { id: 5, name: '렌치 세트', category: '수공구', price: 28000, oldPrice: 35000, best: false,
+        desc: '다양한 규격의 볼트/너트에 맞는 렌치 모음으로 차량 정비에도 유용합니다.',
         img: 'https://images.pexels.com/photos/16243260/pexels-photo-16243260/free-photo-of-wrenches-hanging-on-wall.jpeg?auto=compress&cs=tinysrgb&w=400' },
       { id: 6, name: '니퍼', category: '수공구', price: 9900, oldPrice: 13000, best: false,
+        desc: '전선 피복 벗기기와 절단에 좋은 절연 손잡이 니퍼입니다.',
         img: 'https://images.pexels.com/photos/40951571/pexels-photo-40951571/free-photo-of-close-up-of-red-handled-pliers-on-pegboard.jpeg?auto=compress&cs=tinysrgb&w=400' },
       { id: 7, name: '그라인더', category: '전동공구', price: 65000, oldPrice: 80000, best: true,
+        desc: '금속 절단과 연마에 강한 고속 회전 그라인더입니다.',
         img: 'https://images.pexels.com/photos/977526/pexels-photo-977526.jpeg?auto=compress&cs=tinysrgb&w=400' },
       { id: 8, name: '전기톱', category: '전동공구', price: 95000, oldPrice: 120000, best: false,
+        desc: '목재 절단을 빠르고 정확하게 해주는 전동 원형톱입니다.',
         img: 'https://images.pexels.com/photos/18866926/pexels-photo-18866926/free-photo-of-cutting-a-board-using-a-dewalt-circular-saw-and-a-speed-square.jpeg?auto=compress&cs=tinysrgb&w=400' },
       { id: 9, name: '캘리퍼스', category: '측정공구', price: 15000, oldPrice: 20000, best: false,
+        desc: '0.01mm 단위까지 정밀하게 측정 가능한 디지털 캘리퍼스입니다.',
         img: 'https://images.pexels.com/photos/32633664/pexels-photo-32633664/free-photo-of-digital-caliper-on-rustic-wooden-surface.jpeg?auto=compress&cs=tinysrgb&w=400' },
       { id: 10, name: '수평계', category: '측정공구', price: 11000, oldPrice: 14000, best: false,
+        desc: '선반, 액자 설치 시 수평을 정확히 맞춰주는 필수 측정공구입니다.',
         img: 'https://images.pexels.com/photos/6251067/pexels-photo-6251067.jpeg?auto=compress&cs=tinysrgb&w=400' },
       { id: 11, name: '안전장갑', category: '안전용품', price: 7000, oldPrice: 10000, best: false,
+        desc: '작업 중 손을 보호해주는 튼튼한 가죽 소재 작업 장갑입니다.',
         img: 'https://images.pexels.com/photos/37892679/pexels-photo-37892679/free-photo-of-worn-work-gloves-on-rustic-wooden-surface.jpeg?auto=compress&cs=tinysrgb&w=400' }
     ];
 
@@ -554,12 +644,14 @@
       return `
         <div class="card">
           ${p.best ? '<div class="best-badge">BEST</div>' : ''}
-          <img class="product-photo" src="${p.img}" alt="${p.name}">
-          <h3>${p.name}</h3>
-          <div class="old-price">${p.oldPrice.toLocaleString()}원</div>
-          <div class="price-row">
-            <span class="discount">${discountRate}%</span>
-            <span class="price">${p.price.toLocaleString()}원</span>
+          <div class="card-clickable" onclick="openDetail(${p.id})">
+            <img class="product-photo" src="${p.img}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <div class="old-price">${p.oldPrice.toLocaleString()}원</div>
+            <div class="price-row">
+              <span class="discount">${discountRate}%</span>
+              <span class="price">${p.price.toLocaleString()}원</span>
+            </div>
           </div>
           <button class="add-cart-btn" onclick="addToCart(${p.id})">장바구니 담기</button>
         </div>
@@ -606,6 +698,49 @@
     function showInfo(message) {
       document.getElementById('info-text').textContent = message;
       openModal('info-modal');
+    }
+
+    // 상품 상세보기
+    let detailProductId = null;
+    let detailQty = 1;
+
+    function openDetail(id) {
+      const p = products.find(function (pr) { return pr.id === id; });
+      if (!p) return;
+
+      detailProductId = id;
+      detailQty = 1;
+
+      const discountRate = Math.round((1 - p.price / p.oldPrice) * 100);
+      document.getElementById('detail-img').src = p.img;
+      document.getElementById('detail-img').alt = p.name;
+      document.getElementById('detail-name').textContent = p.name;
+      document.getElementById('detail-category').textContent = p.category;
+      document.getElementById('detail-desc').textContent = p.desc;
+      document.getElementById('detail-oldprice').textContent = p.oldPrice.toLocaleString() + '원';
+      document.getElementById('detail-discount').textContent = discountRate + '%';
+      document.getElementById('detail-price').textContent = p.price.toLocaleString() + '원';
+      document.getElementById('detail-qty').textContent = detailQty;
+
+      openModal('detail-modal');
+    }
+
+    function changeDetailQty(diff) {
+      detailQty = Math.max(1, detailQty + diff);
+      document.getElementById('detail-qty').textContent = detailQty;
+    }
+
+    function addDetailToCart() {
+      const cart = getCart();
+      const line = cart.find(function (c) { return c.id === detailProductId; });
+      if (line) {
+        line.qty += detailQty;
+      } else {
+        cart.push({ id: detailProductId, qty: detailQty });
+      }
+      saveCart(cart);
+      closeModal('detail-modal');
+      showInfo('장바구니에 담았습니다.');
     }
 
     // 회원가입 / 로그인 (localStorage에 저장되는 간단한 데모 기능)
